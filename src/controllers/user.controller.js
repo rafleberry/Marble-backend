@@ -156,9 +156,9 @@ const controlFollow = async (req, res, next) => {
 const getFilteredUsers = async (req, res, next) => {
   const { creator, page, limit, sort = "asc" } = req.query;
   User.find({ isCreator: creator })
-    // .sort({ name: sort })
-    // .skip(page * limit)
-    // .limit(limit)
+    .sort({ name: sort })
+    .skip(page * limit)
+    .limit(limit)
     .then((doc) => {
       return res.send(doc);
     })
