@@ -104,18 +104,13 @@ const getUsers = async (req, res, next) => {
 
 const getNumberInfo = async (req, res, next) => {
   try {
-    const [totalUsers, totalCreators, totalCollectors, totalOthers] =
-      await Promise.all([
-        User.countDocuments(),
-        User.countDocuments({ isCreator: true }),
-        User.countDocuments({ isCollector: true }),
-        User.countDocuments({ isCollector: false, isCreator: false }),
-      ]);
+    const [totalUsers, totalCreators] = await Promise.all([
+      User.countDocuments(),
+      User.countDocuments({ isCreator: true }),
+    ]);
     return res.status(200).send({
       profiles: totalUsers,
       creators: totalCreators,
-      collectors: totalCollectors,
-      others: totalOthers,
     });
   } catch (err) {
     return next(err);
@@ -158,6 +153,31 @@ const controlFollow = async (req, res, next) => {
     });
   });
 };
+const getFilteredUsers = async (req, res, next) => {
+  const { creator, page, limit, sort = "asc" } = req.query;
+  User.find({ isCreator: creator })
+    // .sort({ name: sort })
+    // .skip(page * limit)
+    // .limit(limit)
+    .then((doc) => {
+      return res.send(doc);
+    })
+    .catch((err) => {
+      return next(err);
+    });
+};
+const setCreator = async (req, res, next) => {
+  const { id } = req.body;
+  User.findOne({ id }, (err, doc) => {
+    if (err) return next(err);
+    if (!doc) return res.status(400).send({ msg: "User doesn't exist" });
+    doc.isCreator = true;
+    doc.save((saveErr, saveDoc) => {
+      if (saveErr) return next(saveErr);
+      return res.send(saveDoc);
+    });
+  });
+};
 module.exports = {
   registerUserInfo,
   getUserInfo,
@@ -167,4 +187,6 @@ module.exports = {
   getAvatar,
   loginUser,
   controlFollow,
+  getFilteredUsers,
+  setCreator,
 };
