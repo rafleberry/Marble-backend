@@ -69,8 +69,8 @@ const getAllCollections = async (req, res, next) => {
   });
 };
 const getActivedCollections = async (req, res, next) => {
-  const { category } = req.query;
-  Collection.find({ category }, (err, doc) => {
+  const { category, from_index } = req.query;
+  Collection.find({ category }, { skip: from_index, limit: 20 }, (err, doc) => {
     if (err) return next(err);
     if (!doc) return res.send([]);
     return res.send(doc.map((element) => element.id));
