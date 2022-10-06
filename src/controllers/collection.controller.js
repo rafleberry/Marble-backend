@@ -70,11 +70,17 @@ const getAllCollections = async (req, res, next) => {
 };
 const getActivedCollections = async (req, res, next) => {
   const { category, from_index } = req.query;
-  Collection.find({ category }, { skip: from_index, limit: 20 }, (err, doc) => {
-    if (err) return next(err);
-    if (!doc) return res.send([]);
-    return res.send(doc.map((element) => element.id));
-  });
+  Collection.find({ category })
+    .skip(from_index)
+    .limit(20)
+    .then((doc) => {
+      if (!doc) return res.send([]);
+      console.log("doc: ", doc);
+      return res.send(doc.map((element) => element.id));
+    })
+    .catch((err) => {
+      return next(err);
+    });
 };
 const getCollection = async (req, res, next) => {
   const { id } = req.query;
