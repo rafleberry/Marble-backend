@@ -131,27 +131,23 @@ const getAvatar = async (req, res, next) => {
 const loginUser = async (req, res, next) => {};
 const controlFollow = async (req, res, next) => {
   const { id, target } = req.body;
-  User.findOne({ id }, (err, doc) => {
-    if (err) return next(err);
-    const index = doc.following.indexOf(target);
-    if (index >= 0) {
-      doc.following.splice(index, 1);
-    } else doc.following.push(target);
-    doc.save((err, user) => {
-      if (err) return next(err);
-    });
-  });
-  User.findOne({ target }, (err, doc) => {
-    if (err) return next(err);
-    const index = doc.followers.indexOf(target);
-    if (index >= 0) {
-      doc.followers.splice(index, 1);
-    } else doc.followers.push(target);
-    doc.save((err, user) => {
-      if (err) return next(err);
-      return res.send(user);
-    });
-  });
+  try {
+    const first_doc = await User.findOne({ id });
+    const first_index = first_doc.following.indexOf(target);
+    if (first_index >= 0) {
+      first_doc.following.splice(first_index, 1);
+    } else first_doc.following.push(target);
+    first_doc.save();
+    const sec_doc = await User.findOne({ id: target });
+    const sec_index = sec_doc.following.indexOf(target);
+    if (sec_index >= 0) {
+      sec_doc.following.splice(sec_index, 1);
+    } else sec_doc.following.push(target);
+    const sendData = await sec_doc.save();
+    return res.send(sendData);
+  } catch (err) {
+    return next(err);
+  }
 };
 const getFilteredUsers = async (req, res, next) => {
   const { creator, page, limit, sort = "asc" } = req.query;
