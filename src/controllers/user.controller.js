@@ -91,11 +91,8 @@ const getUserInfo = async (req, res, next) => {
 
 const getUsers = async (req, res, next) => {
   try {
-    const { page, limit, sort = "asc" } = req.query;
-    const data = await User.find()
-      .sort({ name: sort })
-      .skip(page * limit)
-      .limit(limit);
+    const { skip, limit, sort = "asc" } = req.query;
+    const data = await User.find().sort({ name: sort }).skip(skip).limit(limit);
     return res.status(200).send(data);
   } catch (err) {
     return next(err);
@@ -150,10 +147,10 @@ const controlFollow = async (req, res, next) => {
   }
 };
 const getFilteredUsers = async (req, res, next) => {
-  const { creator, page, limit, sort = "asc" } = req.query;
+  const { creator, skip, limit, sort = "asc" } = req.query;
   User.find({ isCreator: creator })
     .sort({ name: sort })
-    .skip(page * limit)
+    .skip(skip)
     .limit(limit)
     .then((doc) => {
       return res.send(doc);
