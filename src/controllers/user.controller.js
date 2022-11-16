@@ -125,6 +125,26 @@ const getAvatar = async (req, res, next) => {
     }
   });
 };
+
+const getSimpleUser = async (req, res, next) => {
+  try {
+    const { id } = req.query;
+    User.findOne({ id }, (err, doc) => {
+      if (err) return next(err);
+      if (!doc) {
+        const new_user = new User({ id: id });
+        new_user.save((error, newUser) => {
+          if (error) return next(error);
+          return res.status(200).send(newUser);
+        });
+      } else {
+        return res.status(200).send({ avatar: doc.avatar, name: doc.name });
+      }
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
 const loginUser = async (req, res, next) => {};
 const controlFollow = async (req, res, next) => {
   const { id, target } = req.body;
@@ -171,6 +191,7 @@ const setCreator = async (req, res, next) => {
     });
   });
 };
+
 module.exports = {
   registerUserInfo,
   getUserInfo,
@@ -182,4 +203,5 @@ module.exports = {
   controlFollow,
   getFilteredUsers,
   setCreator,
+  getSimpleUser,
 };
