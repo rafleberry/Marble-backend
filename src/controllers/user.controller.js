@@ -91,9 +91,12 @@ const getUserInfo = async (req, res, next) => {
 
 const getUsers = async (req, res, next) => {
   try {
-    const { skip, limit, sort = "asc" } = req.query;
-    const data = await User.find().sort({ name: sort }).skip(skip).limit(limit);
-    return res.status(200).send(data);
+    const { skip, limit, sort = "desc" } = req.query;
+    const data = await User.find()
+      .sort({ name: sort, id: -1 })
+      .skip(skip)
+      .limit(limit);
+    return res.status(200).send({ data, skip, limit });
   } catch (err) {
     return next(err);
   }
