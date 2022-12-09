@@ -96,7 +96,7 @@ const getUsers = async (req, res, next) => {
       .sort({ name: sort, id: -1 })
       .skip(skip)
       .limit(limit);
-    return res.status(200).send({ data, skip, limit });
+    return res.status(200).send(data);
   } catch (err) {
     return next(err);
   }
