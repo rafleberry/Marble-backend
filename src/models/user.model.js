@@ -19,16 +19,6 @@ const UserModelSchema = new Schema(
     name: {
       type: String,
     },
-    following: [
-      {
-        type: String,
-      },
-    ],
-    followers: [
-      {
-        type: String,
-      },
-    ],
     mail: {
       type: String,
       lowercase: true,

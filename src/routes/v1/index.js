@@ -2,15 +2,14 @@ const express = require("express");
 const userController = require("../../controllers/user.controller");
 const collectionController = require("../../controllers/collection.controller");
 const nftController = require("../../controllers/nft.controller");
+const followController = require("../../controllers/follow.controller");
 
 const router = express.Router();
 
 //============================//
 //        User Info           //
 //============================//
-router.post("/login", userController.loginUser);
 router.post("/register_user", userController.registerUserInfo);
-router.post("/control_follow", userController.controlFollow);
 router.post("/set_image", userController.setImage);
 router.post("/set_creator", userController.setCreator);
 router.get("/get_user", userController.getUserInfo);
@@ -48,4 +47,11 @@ router.post("/nft/register_nft", nftController.registerNft);
 router.post("/nft/set_nft", nftController.setNft);
 router.get("/nft/get_nfts", nftController.getNfts);
 
+//============================//
+//        Follow Info         //
+//============================//
+
+router.get("/follow/get_follow", followController.getFollowInfo);
+router.get("/follow/get_followers", followController.getFollowers);
+router.post("/follow/handle_follow", followController.handleFollow);
 module.exports = router;
