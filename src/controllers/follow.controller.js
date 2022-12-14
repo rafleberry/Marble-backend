@@ -1,4 +1,5 @@
 const Follow = require("../models/follow.model");
+const User = require("../models/user.model");
 
 const getFollowInfo = async (req, res, next) => {
   try {
@@ -38,9 +39,17 @@ const handleFollow = async (req, res, next) => {
 
 const getFollowers = async (req, res, next) => {
   try {
-    const { owner } = req.query;
-    const followers = await Follow.find({ from: owner });
-    return res.send(followers.map((_follower) => _follower.to));
+    const { owner, skip = 0, limit = 15 } = req.query;
+    const followers = await Follow.find({ from: owner })
+      .skip(skip)
+      .limit(limit);
+    const followerInfos = await Promise.all(
+      followers.map(async (element) => {
+        const info = await User.findOne({ id: element.to });
+        return info;
+      })
+    );
+    return res.send(followerInfos);
   } catch (err) {
     return next(err);
   }
