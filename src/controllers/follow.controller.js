@@ -45,8 +45,16 @@ const getFollowers = async (req, res, next) => {
       .limit(limit);
     const followerInfos = await Promise.all(
       followers.map(async (element) => {
-        const info = await User.findOne({ id: element.to });
-        return info;
+        const [info, followerCounts, followingCounts] = await Promise.all([
+          User.findOne({ id: element.to }),
+          Follow.find({ to: element.to }).count(),
+          Follow.find({ from: element.to }).count(),
+        ]);
+        return {
+          ...info._doc,
+          following: followingCounts,
+          followers: followerCounts,
+        };
       })
     );
     return res.send(followerInfos);
