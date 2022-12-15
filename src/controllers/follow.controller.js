@@ -52,8 +52,8 @@ const getFollowers = async (req, res, next) => {
         ]);
         return {
           ...info._doc,
-          following: followingCounts,
-          followers: followerCounts,
+          following: followerCounts,
+          followers: followingCounts,
         };
       })
     );
