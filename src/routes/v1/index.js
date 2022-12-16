@@ -3,6 +3,7 @@ const userController = require("../../controllers/user.controller");
 const collectionController = require("../../controllers/collection.controller");
 const nftController = require("../../controllers/nft.controller");
 const followController = require("../../controllers/follow.controller");
+const commentController = require("../../controllers/comment.controller");
 
 const router = express.Router();
 
@@ -54,4 +55,11 @@ router.get("/nft/get_nfts", nftController.getNfts);
 router.get("/follow/get_follow", followController.getFollowInfo);
 router.get("/follow/get_followers", followController.getFollowers);
 router.post("/follow/handle_follow", followController.handleFollow);
+
+//============================//
+//        Comment Info        //
+//============================//
+
+router.get("/comment/get_comment_counts", commentController.getCommentCounts);
+router.post("/comment/add_comment", commentController.addComment);
 module.exports = router;
