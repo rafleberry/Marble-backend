@@ -21,4 +21,14 @@ const getCommentCounts = async (req, res, next) => {
   }
 };
 
-module.exports = { addComment, getCommentCounts };
+const getComments = async (req, res, next) => {
+  try {
+    const { token_id, skip = 0, limit = 10 } = req.query;
+    const comments = await Comment.find({ token_id }).skip(skip).limit(limit);
+    return res.send({ comment: comments });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+module.exports = { addComment, getCommentCounts, getComments };

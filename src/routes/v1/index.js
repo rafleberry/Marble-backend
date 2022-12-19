@@ -4,6 +4,7 @@ const collectionController = require("../../controllers/collection.controller");
 const nftController = require("../../controllers/nft.controller");
 const followController = require("../../controllers/follow.controller");
 const commentController = require("../../controllers/comment.controller");
+const favoriteController = require("../../controllers/favorite.controller");
 
 const router = express.Router();
 
@@ -61,5 +62,14 @@ router.post("/follow/handle_follow", followController.handleFollow);
 //============================//
 
 router.get("/comment/get_comment_counts", commentController.getCommentCounts);
+router.get("/comment/get_comments", commentController.getComments);
 router.post("/comment/add_comment", commentController.addComment);
+
+//============================//
+//       Favorite Info        //
+//============================//
+
+router.get("/favorite/get_favorite_counts", favoriteController.getFavoriteCnt);
+router.get("/favorite/get_favorites", favoriteController.getFavorites);
+router.post("/favorite/add_favorite", favoriteController.addFavorite);
 module.exports = router;
