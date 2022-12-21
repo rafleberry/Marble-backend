@@ -20,6 +20,7 @@ router.get("/get_all_users", userController.getUsers);
 router.get("/number_infos", userController.getNumberInfo);
 router.get("/get_avatar", userController.getAvatar);
 router.get("/get_filtered_users", userController.getFilteredUsers);
+router.get("/remove_duplicates", userController.removeDuplicates);
 
 //============================//
 //       Collection Info      //
@@ -55,6 +56,7 @@ router.get("/nft/get_nfts", nftController.getNfts);
 
 router.get("/follow/get_follow", followController.getFollowInfo);
 router.get("/follow/get_followers", followController.getFollowers);
+router.get("/follow/get_unfollowers", followController.getUnFollowers);
 router.post("/follow/handle_follow", followController.handleFollow);
 
 //============================//

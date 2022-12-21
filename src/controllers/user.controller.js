@@ -3,36 +3,22 @@ const User = require("../models/user.model");
 const registerUserInfo = async (req, res, next) => {
   try {
     const { id, name, bio, mail, discord } = req.body;
-
-    User.findOne({ id }, (err, doc) => {
-      if (err) return next(err);
-      if (!doc) {
-        const data = new User({
-          id,
-          name,
-          bio,
-          mail,
-          discord,
-        });
-        data.save((err, doc) => {
-          if (err) {
-            return next(err);
-          }
-          return res.send(doc);
-        });
-      } else {
-        doc.name = name;
-        doc.bio = bio;
-        doc.mail = mail;
-        doc.discord = discord;
-        doc.save((error, modifiedUser) => {
-          if (error) {
-            return next(error);
-          }
-          return res.send(modifiedUser);
-        });
-      }
-    });
+    let oldUser = await User.findOne({ id });
+    if (!oldUser) {
+      oldUser = new User({
+        id,
+        name,
+        bio,
+        mail,
+        discord,
+      });
+    } else {
+      oldUser.name = name;
+      oldUser.bio = bio;
+      oldUser.mail = mail;
+      oldUser.discord = discord;
+    }
+    await oldUser.save();
   } catch (error) {
     console.log("register error: ", error);
     return next(error);
@@ -173,6 +159,22 @@ const setCreator = async (req, res, next) => {
     });
   });
 };
+const removeDuplicates = async (req, res, next) => {
+  try {
+    const users = await User.find();
+    const userIds = users.map((_user) => _user.id);
+    for (let i = 0; i < userIds.length; i++) {
+      const _count = await User.find({ id: userIds[i] }).count();
+      if (_count > 1) {
+        console.log("userIds: ", userIds[i]);
+        await User.findOneAndRemove({ id: userIds[i] });
+      }
+    }
+    return res.send("ok");
+  } catch (err) {
+    return next(err);
+  }
+};
 
 module.exports = {
   registerUserInfo,
@@ -184,4 +186,5 @@ module.exports = {
   getFilteredUsers,
   setCreator,
   getSimpleUser,
+  removeDuplicates,
 };

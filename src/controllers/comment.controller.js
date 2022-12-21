@@ -1,4 +1,5 @@
 const Comments = require("../models/comment.model");
+const User = require("../models/user.model");
 
 const addComment = async (req, res, next) => {
   try {
@@ -24,8 +25,17 @@ const getCommentCounts = async (req, res, next) => {
 const getComments = async (req, res, next) => {
   try {
     const { token_id, skip = 0, limit = 10 } = req.query;
-    const comments = await Comment.find({ token_id }).skip(skip).limit(limit);
-    return res.send({ comment: comments });
+    const comments = await Comments.find({ token_id })
+      .sort({ _id: -1 })
+      .skip(skip)
+      .limit(limit);
+    const result = await Promise.all(
+      comments.map(async (_comment) => {
+        const _commentOwnerInfo = await User.findOne({ id: _comment.writer });
+        return { ..._comment._doc, ..._commentOwnerInfo._doc };
+      })
+    );
+    return res.send({ comment: result });
   } catch (err) {
     return next(err);
   }
