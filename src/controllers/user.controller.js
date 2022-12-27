@@ -3,7 +3,7 @@ const User = require("../models/user.model");
 const registerUserInfo = async (req, res, next) => {
   try {
     const { id, name, bio, mail, discord } = req.body;
-    let oldUser = await User.findOne({ id });
+    let oldUser = await User.findOne({ _id });
     if (!oldUser) {
       oldUser = new User({
         id,
@@ -19,6 +19,7 @@ const registerUserInfo = async (req, res, next) => {
       oldUser.discord = discord;
     }
     await oldUser.save();
+    return res.send(oldUser);
   } catch (error) {
     console.log("register error: ", error);
     return next(error);
@@ -176,6 +177,37 @@ const removeDuplicates = async (req, res, next) => {
   }
 };
 
+const getAllUserIds = async (req, res, next) => {
+  try {
+    const { skip, limit, sort = "desc" } = req.query;
+    const data = await User.find().sort({ id: sort }).skip(skip).limit(limit);
+    return res.status(200).send(data.map((_data) => _data.id));
+  } catch (err) {
+    return next(err);
+  }
+};
+
+const getAllEditedUser = async (req, res, next) => {
+  try {
+    const { skip, limit, sort = "desc" } = req.query;
+    const data = await User.find()
+      .sort({
+        avatar: sort,
+        banner: sort,
+        name: sort,
+        mail: sort,
+        discord: sort,
+        bio: sort,
+        _id: -1,
+      })
+      .skip(skip)
+      .limit(limit);
+    return res.status(200).send(data.map((_data) => _data));
+  } catch (err) {
+    return next(err);
+  }
+};
+
 module.exports = {
   registerUserInfo,
   getUserInfo,
@@ -187,4 +219,6 @@ module.exports = {
   setCreator,
   getSimpleUser,
   removeDuplicates,
+  getAllUserIds,
+  getAllEditedUser,
 };

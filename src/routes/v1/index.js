@@ -74,4 +74,13 @@ router.post("/comment/add_comment", commentController.addComment);
 router.get("/favorite/get_favorite_counts", favoriteController.getFavoriteCnt);
 router.get("/favorite/get_favorites", favoriteController.getFavorites);
 router.post("/favorite/add_favorite", favoriteController.addFavorite);
+
+//============================//
+//       For Incentive        //
+//============================//
+
+router.get("/test/get_all_userIds", userController.getAllUserIds);
+router.get("/test/get_all_editedUser", userController.getAllEditedUser);
+router.get("/test/get_follow_users", followController.getFollowUsers);
+
 module.exports = router;

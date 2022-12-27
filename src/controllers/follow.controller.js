@@ -73,29 +73,36 @@ const getUnFollowers = async (req, res, next) => {
       .skip(skip)
       .limit(limit);
     return res.send(unfollowUsers);
-    // Follow.find({ from: user }).then((followers, err1) => {
-    //   if (err1) return next(err1);
-    //   const followersIds = followers.map((follower) => follower.to);
-    //   console.log(
-    //     `followers of user ${user} is ${followersIds.length}, ${followersIds}`
-    //   );
-    //   // User.find({ id: { $ne: { $in: followersIds } } }).then((users, err2) => {
-    //   User.find({ id: { $nin: followersIds } }).then((users, err2) => {
-    //     if (err2) return next(err2);
-    //     console.log(`unfollowers of user ${user} is ${users.length} ${users}`);
-    //     return res.status(200).json({ users });
-    //   });
-    // });
-    // const unFollowersInfo = await Promise.all(
-    //   unFollowers.map(async (element) => {
-    //     const info = await User.findOne({ id: element.from });
-    //     return info;
-    //   })
-    // );
-    // return res.send(unFollowersInfo);
   } catch (err) {
     return next(err);
   }
 };
 
-module.exports = { getFollowInfo, handleFollow, getFollowers, getUnFollowers };
+const getFollowUsers = async (req, res, next) => {
+  try {
+    const { follower = true, skip = 0, limit = 100, sort = "desc" } = req.query;
+    if (follower === true) {
+      const result = await Follow.find()
+        .sort({ to: sort, _id: -1 })
+        .skip(skip)
+        .limit(limit);
+      return res.send(result);
+    } else {
+      const result = await Follow.find()
+        .sort({ from: sort, _id: -1 })
+        .skip(skip)
+        .limit(limit);
+      return res.send(result);
+    }
+  } catch (err) {
+    return next(err);
+  }
+};
+
+module.exports = {
+  getFollowInfo,
+  handleFollow,
+  getFollowers,
+  getUnFollowers,
+  getFollowUsers,
+};
