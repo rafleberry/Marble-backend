@@ -2,7 +2,7 @@ const User = require("../models/user.model");
 
 const registerUserInfo = async (req, res, next) => {
   try {
-    const { id, name, bio, mail, discord } = req.body;
+    const { _id, id, name, bio, mail, discord } = req.body;
     let oldUser = await User.findOne({ _id });
     if (!oldUser) {
       oldUser = new User({
