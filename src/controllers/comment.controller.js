@@ -32,7 +32,11 @@ const getComments = async (req, res, next) => {
     const result = await Promise.all(
       comments.map(async (_comment) => {
         const _commentOwnerInfo = await User.findOne({ id: _comment.writer });
-        return { ..._comment._doc, ..._commentOwnerInfo._doc };
+        return {
+          ..._comment._doc,
+          ..._commentOwnerInfo._doc,
+          createdAt: _comment._doc.createdAt,
+        };
       })
     );
     return res.send({ comment: result });
