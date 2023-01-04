@@ -26,6 +26,18 @@ const registerUserInfo = async (req, res, next) => {
   }
 };
 
+const setAgree = async (req, res, next) => {
+  try {
+    const { _id } = req.body;
+    const user = await User.findById(_id);
+    user.isAgreed = true;
+    await user.save();
+    return res.send(user);
+  } catch (err) {
+    return next(err);
+  }
+};
+
 const setImage = async (req, res, next) => {
   try {
     const { id } = req.body;
@@ -221,4 +233,5 @@ module.exports = {
   removeDuplicates,
   getAllUserIds,
   getAllEditedUser,
+  setAgree,
 };

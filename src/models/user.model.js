@@ -34,6 +34,10 @@ const UserModelSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    isAgreed: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

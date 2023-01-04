@@ -14,6 +14,7 @@ const router = express.Router();
 router.post("/register_user", userController.registerUserInfo);
 router.post("/set_image", userController.setImage);
 router.post("/set_creator", userController.setCreator);
+router.post("/set_agree", userController.setAgree);
 router.get("/get_user", userController.getUserInfo);
 router.get("/get_simple_user", userController.getSimpleUser);
 router.get("/get_all_users", userController.getUsers);

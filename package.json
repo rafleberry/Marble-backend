@@ -19,6 +19,7 @@
     "mongoose": "^6.2.3",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.16",
+    "stream-chat": "^8.2.1",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.4.0"
   }
